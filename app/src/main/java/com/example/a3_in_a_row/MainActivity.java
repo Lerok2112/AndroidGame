@@ -21,8 +21,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView color;
     private Button[] buttons = new Button[9];
     private Button resetGame;
-    private int index_color;
-    private int playerScoreCont, startNum;
+    private int index_color = 0;
+    private int playerScoreCont;
+
 
     private int[] gameState = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     private int[][] winningPositions = {
@@ -32,7 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
     private int[] colors = {Color.parseColor("#00FF00"), //зеленый
             Color.parseColor("#E61616"),  //красный
-            Color.parseColor("#FFFF00")}; //желтый
+            Color.parseColor("#FFFF00"), //желтый
+            Color.parseColor("#3E3B3B")}; //черный станд.
+
 
     private String[] textColors = {"Зеленый", "Красный", "Желтый"};
 
@@ -66,29 +69,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         int gameStatePointer = Integer.parseInt(buttonID.substring(buttonID.length() - 1, buttonID.length())); // 2
 
-        //Log.i("k=", Integer.toString(index_color));
+        //Log.i("Color=", Integer.toString(((Button) v).getSolidColor()));
+        if (gameState[gameStatePointer] == 0) {
 
-        if (index_color == 0) {
-            ((Button) v).setBackgroundColor(colors[0]);
-            gameState[gameStatePointer] = 1;
-        }//зеленый
+            if (index_color == 0) {
+                ((Button) v).setBackgroundColor(colors[0]);
+                gameState[gameStatePointer] = 1;
+            }//зеленый
 
-        if (index_color == 1) {
-            ((Button) v).setBackgroundColor(colors[1]); //красный
-            gameState[gameStatePointer] = 2;
+            if (index_color == 1) {
+                ((Button) v).setBackgroundColor(colors[1]); //красный
+                gameState[gameStatePointer] = 2;
+            }
+            if (index_color == 2) {
+                ((Button) v).setBackgroundColor(colors[2]); //желтый
+                gameState[gameStatePointer] = 3;
+            }
+            index_color = random();
+            color = setTextAndColor(index_color);
         }
-        if (index_color == 2) {
-            ((Button) v).setBackgroundColor(colors[2]); //желтый
-            gameState[gameStatePointer] = 3;
-        }
-
-        index_color = random();
-        color = setTextAndColor(index_color);
 
         if (checkWinner()) {
             playerScoreCont++;
             updatePlayerScore();
         }
+        
         if (!checkEmptyField()) {
             resetGame.callOnClick(); //очищаем поле
             Toast.makeText(this, "Пустые клетки закончились! Попробуй заново.", Toast.LENGTH_SHORT).show();
@@ -110,8 +115,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int max = 2;
         int diff = max - min;
         Random rnd = new Random();
-        int k = rnd.nextInt(diff + 1);
-        k += min;
+        int k = 0;
+        while (k == index_color) {
+            k = rnd.nextInt(diff + 1);
+            k += min;
+        }
         return k;
     }
 
