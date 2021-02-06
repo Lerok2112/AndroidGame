@@ -35,7 +35,7 @@
         android:id="@+id/btn_0"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="30dp"
         android:backgroundTint="#3E3B3B"
         android:textColor="#ffffff"
         android:textSize="60sp"

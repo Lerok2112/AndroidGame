@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int playerScoreCont;
 
 
-    private int[] gameState = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int[] buttonState = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     private int[][] winningPositions = {
             {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, //строки
             {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, //столбцы
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int resourceID = getResources().getIdentifier(buttonID, "id", getPackageName());
             buttons[i] = (Button) findViewById(resourceID);
             buttons[i].setOnClickListener(this);
-            gameState[i] = 0;
+            buttonState[i] = 0;
         }
         playerScoreCont = 0;
     }
@@ -67,23 +67,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String buttonID = v.getResources().getResourceEntryName(v.getId()); // btn_2
 
-        int gameStatePointer = Integer.parseInt(buttonID.substring(buttonID.length() - 1, buttonID.length())); // 2
+        int buttonStatePointer = Integer.parseInt(buttonID.substring(buttonID.length() - 1, buttonID.length())); // 2
 
         //Log.i("Color=", Integer.toString(((Button) v).getSolidColor()));
-        if (gameState[gameStatePointer] == 0) {
+        if (buttonState[buttonStatePointer] == 0) {
 
             if (index_color == 0) {
                 ((Button) v).setBackgroundColor(colors[0]);
-                gameState[gameStatePointer] = 1;
+                // ((Button)v).setEnabled(false);
+                buttonState[buttonStatePointer] = 1;
             }//зеленый
 
             if (index_color == 1) {
                 ((Button) v).setBackgroundColor(colors[1]); //красный
-                gameState[gameStatePointer] = 2;
+                buttonState[buttonStatePointer] = 2;
             }
             if (index_color == 2) {
                 ((Button) v).setBackgroundColor(colors[2]); //желтый
-                gameState[gameStatePointer] = 3;
+                buttonState[buttonStatePointer] = 3;
             }
             index_color = random();
             color = setTextAndColor(index_color);
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             playerScoreCont++;
             updatePlayerScore();
         }
-        
+
         if (!checkEmptyField()) {
             resetGame.callOnClick(); //очищаем поле
             Toast.makeText(this, "Пустые клетки закончились! Попробуй заново.", Toast.LENGTH_SHORT).show();
@@ -132,13 +133,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean checkWinner() {
         boolean winnerResult = false;
         for (int[] winnerPosition : winningPositions) {
-            if (gameState[winnerPosition[0]] == gameState[winnerPosition[1]] &&
-                    gameState[winnerPosition[1]] == gameState[winnerPosition[2]] &&
-                    gameState[winnerPosition[0]] != 0 && gameState[winnerPosition[1]] != 0 && gameState[winnerPosition[2]] != 0) {
+            if (buttonState[winnerPosition[0]] == buttonState[winnerPosition[1]] &&
+                    buttonState[winnerPosition[1]] == buttonState[winnerPosition[2]] &&
+                    buttonState[winnerPosition[0]] != 0 && buttonState[winnerPosition[1]] != 0 && buttonState[winnerPosition[2]] != 0) {
                 winnerResult = true;
                 for (int i = 0; i < 3; i++) {
                     buttons[winnerPosition[i]].setBackgroundColor(Color.parseColor("#3E3B3B"));
-                    gameState[winnerPosition[i]] = 0;
+                    buttonState[winnerPosition[i]] = 0;
                 }
             }
         }
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean checkEmptyField() {
         int k = 0;
         for (int i = 0; i < buttons.length; i++) {
-            if (gameState[i] != 0) k++;
+            if (buttonState[i] != 0) k++;
         }
         if (k == 9) return false;
         else return true;
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void playAgain() {
         for (int i = 0; i < buttons.length; i++) {
-            gameState[i] = 0;
+            buttonState[i] = 0;
             buttons[i].setBackgroundColor(Color.parseColor("#3E3B3B"));
         }
     }
